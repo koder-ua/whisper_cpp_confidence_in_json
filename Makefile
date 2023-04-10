@@ -226,6 +226,7 @@ $(info I CC:       $(CCV))
 $(info I CXX:      $(CXXV))
 $(info )
 
+default: main
 #
 # Build library
 #
@@ -328,23 +329,6 @@ samples:
 
 tiny.en tiny base.en base small.en small medium.en medium large-v1 large: main
 	bash ./models/download-ggml-model.sh $@
-	@echo ""
-	@echo "==============================================="
-	@echo "Running $@ on all samples in ./samples ..."
-	@echo "==============================================="
-	@echo ""
-	@for f in samples/*.wav; do \
-		echo "----------------------------------------------" ; \
-		echo "[+] Running $@ on $$f ... (run 'ffplay $$f' to listen)" ; \
-	    echo "----------------------------------------------" ; \
-		echo "" ; \
-		./main -m models/ggml-$@.bin -f $$f ; \
-		echo "" ; \
-	done
-
-#
-# Tests
-#
 
 .PHONY: tests
 tests:
