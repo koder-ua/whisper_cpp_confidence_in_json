@@ -518,6 +518,12 @@ bool output_json(struct whisper_context * ctx, const char * fname, const whisper
         end_value(end);
     };
 
+    auto value_f = [&](const char *name, const float val, bool end = false) {
+        start_value(name);
+        fout << val;
+        end_value(end);
+    };
+
     auto value_b = [&](const char *name, const bool val, bool end) {
         start_value(name);
         fout << (val ? "true" : "false");
@@ -566,6 +572,8 @@ bool output_json(struct whisper_context * ctx, const char * fname, const whisper
                 const char * text = whisper_full_get_segment_text(ctx, i);
                 const int64_t t0 = whisper_full_get_segment_t0(ctx, i);
                 const int64_t t1 = whisper_full_get_segment_t1(ctx, i);
+                const float  p    = whisper_full_get_token_p(ctx, i, 0);
+                const float conf = std::pow(p, 3);
 
                 start_obj(nullptr);
                     start_obj("timestamps");
@@ -576,6 +584,7 @@ bool output_json(struct whisper_context * ctx, const char * fname, const whisper
                         value_i("from", t0 * 10, false);
                         value_i("to", t1 * 10, true);
                     end_obj(false);
+                    value_f("confidence", conf, false);
                     value_s("text", text, !params.diarize);
 
                     if (params.diarize && pcmf32s.size() == 2) {
