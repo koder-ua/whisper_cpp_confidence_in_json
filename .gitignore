@@ -6,6 +6,7 @@
 .vs/
 .vscode/
 .DS_Store
+.idea/
 
 build/
 build-em/
